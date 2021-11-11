@@ -91,8 +91,13 @@ while True:
 
     #BoopitySnoop displayer sin compass-heading
     currentHeading = compass.heading()
-    speech.say("My, current, compass, heading, is"+str(currentHeading))
+    speech.say("My, current, compass, heading, is,"+str(currentHeading))
     display.scroll(str(currentHeading))
+
+    #BoopitySnoop siger hvad temperaturen er
+    currentTemp = temperature()
+    speech.say("The, current, temperature, here, is,"+str(currentTemp)+". degrees, celcius")
+    display.scroll(str(currentTemp))
 
 
 
