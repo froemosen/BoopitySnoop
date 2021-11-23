@@ -10,11 +10,7 @@ fejlStop = 0 #Bruges til at programmet forsøget at finde data mere end én gang
 startSend = "boop"
 endSend = "poob"
 
-try:
-    s = serial.Serial(serialPortName,baudRate,timeout=1)
-except:
-    print("Kunne ikke finde data gennem", serialPortName, "Husk at tjekke hvilket port arduino kører igennem")
-    sys.exit(1)
+s = serial.Serial(serialPortName,baudRate,timeout=1)
 
 print("Tilslutning lavet - Venter på serial data\n")
 
@@ -28,6 +24,5 @@ while(True):
         else: command = "none"
             
         print(command)
-        if not command == "":
-            serialSend = f",{startSend},{command},{endSend},\n"
-            s.write(serialSend.encode())
+        serialSend = f",{startSend},{command},{endSend},\n"
+        s.write(serialSend.encode())
