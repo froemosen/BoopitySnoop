@@ -1,5 +1,5 @@
 0 Neutral
 1 Venstre
 2 Højre
-3 Frem
-4 Tilbage
+3 Tilbage
+4 Frem

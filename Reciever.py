@@ -35,9 +35,9 @@ while True:
         if message == "forward":
             motor(0, 255, 0, 255)
         elif message == "left":
-            motor(1, 255, 0, 255)
+            motor(1, 50, 0, 50)
         elif message == "right":
-            motor(0, 255, 1, 255)
+            motor(0, 50, 1, 50)
         elif message == "backward":
             motor(1, 100, 1, 100)
         elif message == "none":

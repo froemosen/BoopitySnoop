@@ -6,7 +6,7 @@ import time
 import serial
 import sys
 
-# Load the model
+#Load the model
 model = load_model('keras_model.h5')
 
 # Create the array of the right shape to feed into the keras model
@@ -22,43 +22,36 @@ ret, blackImage = camera.read()
 cv2.waitKey(1)
 time.sleep(3)
 
-
 #Setup af serial
-serialPortName = "COM7" #Skal sandsynligvis ændres. Kommer an på porten som arduino sidder i.  
-baudRate = 115200 #Defineret i main.cpp
-fejlStop = 0 #Bruges til at programmet forsøget at finde data mere end én gang. (Vi oplevede crashes fordi at serial.readline ikke var 100% reliable)
+serialPortName = "COM7" #Skal sandsynligvis ændres. Kommer an på porten som micro:bit sidder i. Dette kan tjekkes på windows under "endhedshåndtering" 
+baudRate = 115200 #Standard baud-rate for micro:bit
 
-startSend = "boop"
-endSend = "poob"
+startSend = "boop" #Kodeord for at andre personer ikke benytter samme UART-kanal
+endSend = "poob" #Bruges til at markere afslutning på besked
 
-print("Tilslutning lavet - Venter på serial data\n")
 
 
 try:
     s = serial.Serial(serialPortName,baudRate,timeout=1)
+    print("Tilslutning lavet - Afventer sending af serial data\n")
 except:
-    print("Kunne ikke finde data gennem", serialPortName, "Husk at tjekke hvilket port arduino kører igennem")
-    sys.exit(1)
+    print("Kunne ikke sende data gennem", serialPortName, "Husk at tjekke hvilket port micro:bit kører igennem")
+    sys.exit(1) #Lukker programmet
 
-def get_image():
+def get_image(): #Tager billede fra kamera, og ændrer det til rgb-format
     retval, image = camera.read()
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    cv2.imshow("image", image) #Viser video-feed
+    cv2.waitKey(1) #Sørger for at video-feed ikke crasher programmet
     image = Image.fromarray(image)
     return image
 
 def predict():
-    # Replace this with the path to your image
-    #image = Image.open('<IMAGE_PATH>')
-    #blackimag.show()#try to check if you want
     image = get_image()
-    #cv2.imshow("image", image)
-    cv2.waitKey(1)
 
     #resize the image to a 224x224 with the same strategy as in TM2:
     #image = np.array(cap)
-    #resizing the image to be at least 224x224 and then cropping from the center
-   
-        
+    #resizing the image to be at least 224x224 and then cropping from the center        
     size = (224, 224)
     image = ImageOps.fit(image, size, Image.ANTIALIAS)
 
@@ -80,10 +73,11 @@ def sendSerial(command):
             serialSend = f",{startSend},{command},{endSend},\n"
             s.write(serialSend.encode())
     
-catefories=["none","left","right","forward","backward"]
+categories=["none","left","right","backward","forward"]
+
 if __name__ == '__main__':
     while True:
-        command = (catefories[predict()])
+        command = (categories[predict()])
         print(command)
         sendSerial(command)
         

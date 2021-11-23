@@ -10,7 +10,11 @@ fejlStop = 0 #Bruges til at programmet forsøget at finde data mere end én gang
 startSend = "boop"
 endSend = "poob"
 
-s = serial.Serial(serialPortName,baudRate,timeout=1)
+try:
+    s = serial.Serial(serialPortName,baudRate,timeout=1)
+except:
+    print("Kunne ikke finde data gennem", serialPortName, "Husk at tjekke hvilket port arduino kører igennem")
+    sys.exit(1)
 
 print("Tilslutning lavet - Venter på serial data\n")
 
