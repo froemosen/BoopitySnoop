@@ -1,13 +1,12 @@
 import radio
 import random
 from microbit import *
-import speech
 
 # The radio won't work unless it's switched on.
 radio.on()
-radio.config(group=42, queue=1)
+radio.config(group=42, queue=1) #Gruppe og kølængde defineres
 
-# Maqueen motor control
+# Maqueen motor control - Taget fra eksempler
 # direction:0=forward  1=back
 # speed：0~255
 I2caddr = 0x10
@@ -22,14 +21,14 @@ def motor(directionL, speedL, directionR, speedR):
 
 # Event loop.
 while True:
-    incoming = radio.receive()
+    incoming = radio.receive() #Besked sendt over Radio gemmes i variabel
 
     if not incoming == None:
         data = incoming.split(",")
 
         for i in range(len(data)):
-            if data[i] == "boop":
-                message = str(data[i+1])
+            if data[i] == "boop" and data[i+2]== "poob": #Sikkerhed og afkodning af besked
+                message = str(data[i+1]) #Den del af beskeden som skal gemmes, gemmes i ny variabel
 
 
         if message == "forward":
