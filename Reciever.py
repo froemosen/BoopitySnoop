@@ -1,10 +1,25 @@
 import radio
 import random
+import neopixel
 from microbit import *
 
 # The radio won't work unless it's switched on.
 radio.on()
 radio.config(group=42, queue=1) #Gruppe og kølængde defineres
+
+#Turn on LEDS
+pin8.write_digital(1)
+pin12.write_digital(1)
+
+#Define neopixel
+np = neopixel.NeoPixel(pin15, 4)
+
+# Assign the current LED a red, green and blue value
+for pixel_id in range(0, len(np)):
+    np[pixel_id] = (255, 0, 0)
+
+# Display the current pixel data on the Neopixel strip
+np.show()
 
 # Maqueen motor control - Taget fra eksempler
 # direction:0=forward  1=back
@@ -35,9 +50,9 @@ while True:
         if "forward" in message:
             motor(0, 255, 0, 255)
         elif "left" in message:
-            motor(1, 50, 0, 50)
+            motor(1, 200, 0, 200)
         elif "right" in message:
-            motor(0, 50, 1, 50)
+            motor(0, 200, 1, 200)
         elif "backward" in message:
             motor(1, 100, 1, 100)
         elif "none" in message:
