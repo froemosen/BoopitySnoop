@@ -24,21 +24,22 @@ while True:
     incoming = radio.receive() #Besked sendt over Radio gemmes i variabel
 
     if not incoming == None:
-        data = incoming.split(",")
+        #data = incoming.split(",")
 
-        for i in range(len(data)):
-            if data[i] == "boop" and data[i+2]== "poob": #Sikkerhed og afkodning af besked
-                message = str(data[i+1]) #Den del af beskeden som skal gemmes, gemmes i ny variabel
+        #for i in range(len(data)):
+            #if data[i] == "boop" and data[i+2]== "poob": #Sikkerhed og afkodning af besked
+                #message = str(data[i+1]) #Den del af beskeden som skal gemmes, gemmes i ny variabel
 
+        message = str(incoming)
 
-        if message == "forward":
+        if "forward" in message:
             motor(0, 255, 0, 255)
-        elif message == "left":
+        elif "left" in message:
             motor(1, 50, 0, 50)
-        elif message == "right":
+        elif "right" in message:
             motor(0, 50, 1, 50)
-        elif message == "backward":
+        elif "backward" in message:
             motor(1, 100, 1, 100)
-        elif message == "none":
+        elif "none" in message:
             motor(0, 0, 0, 0)
         else: pass

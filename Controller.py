@@ -26,7 +26,10 @@ while(True):
         elif keyboard.is_pressed('s'): command = "backward"
         elif keyboard.is_pressed('d'): command = "right"
         else: command = "none"
-            
+        
+        command+='\r\n'
         print(command)
-        serialSend = f",{startSend},{command},{endSend},\n"
-        s.write(serialSend.encode())
+        #serialSend = f",{startSend},{command},{endSend},"
+        #s.write(serialSend.encode())
+        s.write(command.encode())
+
