@@ -50,11 +50,22 @@ while True:
         if "forward" in message:
             motor(0, 255, 0, 255)
         elif "left" in message:
-            motor(1, 200, 0, 200)
+            motor(1, 100, 0, 100)
         elif "right" in message:
-            motor(0, 200, 1, 200)
+            motor(0, 100, 1, 100)
         elif "backward" in message:
-            motor(1, 100, 1, 100)
+            motor(1, 180, 1, 180)
+
+        elif "fwdl" in message:
+            motor(0, 40, 0, 255)
+        elif "fwdr" in message:
+            motor(0, 255, 0, 40)
+        elif "bwdl" in message:
+            motor(1, 20, 1, 200)
+        elif "bwdr" in message:
+            motor(1, 200, 1, 20)
+
         elif "none" in message:
             motor(0, 0, 0, 0)
+
         else: pass
