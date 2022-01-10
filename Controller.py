@@ -2,6 +2,7 @@ import serial
 import sys
 import time
 import keyboard
+import random as r
 
 serialPortName = "COM7" #Skal sandsynligvis ændres. Kommer an på porten som arduino sidder i.  
 baudRate = 115200 #Defineret i main.cpp
@@ -18,24 +19,43 @@ except:
 
 print("Tilslutning lavet - Venter på serial data\n")
 
+def secure(key):
+    code = (key*27%123456*42+147+key)%999
+    return code
+
 while(True):
     if s.is_open:
         
-        if keyboard.is_pressed('w') and keyboard.is_pressed('a'): command = "fwdl"
-        elif keyboard.is_pressed('w') and keyboard.is_pressed('d'): command = "fwdr"
-        elif keyboard.is_pressed('s') and keyboard.is_pressed('a'): command = "bwdl"
-        elif keyboard.is_pressed('s') and keyboard.is_pressed('d'): command = "bwdr"
-        elif keyboard.is_pressed('w'): command = "forward"
-        elif keyboard.is_pressed('a'): command = "left"
-        elif keyboard.is_pressed('s'): command = "backward"
-        elif keyboard.is_pressed('d'): command = "right"
-        else: command = "none"
+        if keyboard.is_pressed('w') and keyboard.is_pressed('a'): command = "q" #"fwdl"
+        elif keyboard.is_pressed('w') and keyboard.is_pressed('d'): command = "e" #"fwdr"
+        elif keyboard.is_pressed('s') and keyboard.is_pressed('a'): command = "z" #"bwdl"
+        elif keyboard.is_pressed('s') and keyboard.is_pressed('d'): command = "c" #"bwdr"
+        elif keyboard.is_pressed('w'): command = "w" #"forward"
+        elif keyboard.is_pressed('a'): command = "a" #"left"
+        elif keyboard.is_pressed('s'): command = "s" #"backward"
+        elif keyboard.is_pressed('d'): command = "d" #"right"
+        else: command = "n" #"none"
+
         
         print(command)
 
+        #Secure message
+        key0 = r.randint(45, 126) #81 ascii-karakterer som ikke er et komma - Giver 81^2 (6.561) forskellige kombinationer
+        key1 = r.randint(45, 126)
+        key = int(str(key0)+str(key1)+str(ord(command)))
+        charKey0 = chr(key0)
+        charKey1 = chr(key1)
+        code = secure(key)
+        command = f",{charKey0+charKey1},{command},{code},"
+        print(key)
+        print(command)
+
+        #End message
         command+='\r\n'
         
         #serialSend = f",{startSend},{command},{endSend},"
         #s.write(serialSend.encode())
         s.write(command.encode())
+
+        #input()
 

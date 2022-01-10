@@ -7,6 +7,9 @@ from microbit import *
 radio.on()
 radio.config(group=42, queue=1) #Gruppe og kølængde defineres
 
+#Show power level
+
+
 #Turn on LEDS
 pin8.write_digital(1)
 pin12.write_digital(1)
@@ -34,38 +37,65 @@ def motor(directionL, speedL, directionR, speedR):
     buf[4] = speedR
     i2c.write(I2caddr, buf)
 
-# Event loop.
+#Security check - Selv udarbejdet.
+def secure(recieved):
+    data = recieved.split(",")
+
+    key = ""
+
+    for char in data[1]:
+        key += str(ord(char))
+
+    key += str(ord(data[2]))
+
+    #print(key)
+    #print(str(ord(data[2])))
+
+    key = int(key)
+
+    #display.scroll(str(key))
+
+    #display.scroll(str((key*27%123456*42+147+key)%999))
+
+    code = int(data[3])
+
+    if code == (key*27%123456*42+147+key)%999: return (True, str(data[2]))
+    else: return (False, str(data[2]))
+
+
+
+# Event loop
 while True:
     incoming = radio.receive() #Besked sendt over Radio gemmes i variabel
+    message = str(incoming)
 
     if not incoming == None:
-        #data = incoming.split(",")
+        try: security, command = secure(message)
+        except: security = False
 
-        #for i in range(len(data)):
-            #if data[i] == "boop" and data[i+2]== "poob": #Sikkerhed og afkodning af besked
-                #message = str(data[i+1]) #Den del af beskeden som skal gemmes, gemmes i ny variabel
+        if security:
+            if "w" in command: #"forward"
+                motor(0, 255, 0, 255)
+            elif "a" in command: #"left"
+                motor(1, 100, 0, 100)
+            elif "d" in command: #"right"
+                motor(0, 100, 1, 100)
+            elif "s" in command: #"backward"
+                motor(1, 180, 1, 180)
 
-        message = str(incoming)
+            elif "q" in command: #"fwdl"
+                motor(0, 40, 0, 255)
+            elif "e" in command: #"fwdr"
+                motor(0, 255, 0, 40)
+            elif "z" in command: #"bwdl"
+                motor(1, 200, 1, 20)
+            elif "c" in command: #"bwdr"
+                motor(1, 20, 1, 200)
 
-        if "forward" in message:
-            motor(0, 255, 0, 255)
-        elif "left" in message:
-            motor(1, 100, 0, 100)
-        elif "right" in message:
-            motor(0, 100, 1, 100)
-        elif "backward" in message:
-            motor(1, 180, 1, 180)
+            elif "n" in command: #"none"
+                motor(0, 0, 0, 0)
 
-        elif "fwdl" in message:
-            motor(0, 40, 0, 255)
-        elif "fwdr" in message:
-            motor(0, 255, 0, 40)
-        elif "bwdl" in message:
-            motor(1, 20, 1, 200)
-        elif "bwdr" in message:
-            motor(1, 200, 1, 20)
-
-        elif "none" in message:
-            motor(0, 0, 0, 0)
-
+            else: pass
         else: pass
+    else: pass
+
