@@ -24,38 +24,43 @@ def secure(key):
     return code
 
 while(True):
-    if s.is_open:
+    try:
+        if s.is_open:
+            
+            if keyboard.is_pressed('w') and keyboard.is_pressed('a'): command = "q" #"fwdl"
+            elif keyboard.is_pressed('w') and keyboard.is_pressed('d'): command = "e" #"fwdr"
+            elif keyboard.is_pressed('s') and keyboard.is_pressed('a'): command = "z" #"bwdl"
+            elif keyboard.is_pressed('s') and keyboard.is_pressed('d'): command = "c" #"bwdr"
+            elif keyboard.is_pressed('w'): command = "w" #"forward"
+            elif keyboard.is_pressed('a'): command = "a" #"left"
+            elif keyboard.is_pressed('s'): command = "s" #"backward"
+            elif keyboard.is_pressed('d'): command = "d" #"right"
+            else: command = "n" #"none"
+
+            
+            print(command)
+
+            #Secure message
+            key0 = r.randint(45, 126) #81 ascii-karakterer som ikke er et komma - Giver 81^2*8 (52.488) forskellige kombinationer
+            key1 = r.randint(45, 126)
+            unix = str(round(time.time()%1000, 2)).replace(".", "")
+            key = int(str(key0)+str(key1)+str(ord(command))+unix)
+            charKey0 = chr(key0)
+            charKey1 = chr(key1)
+            code = secure(key)
+            command = f",{charKey0+charKey1},{command},{code},{unix},"
+            #print(key)
+            print(command)
+            print(key)
+
+            #End message
+            command+='\r\n'
+            
+            #serialSend = f",{startSend},{command},{endSend},"
+            #s.write(serialSend.encode())
+            s.write(command.encode())
+
+            time.sleep(0.01)
+    except: print("Failure, STOP MESSING WITH ME")
         
-        if keyboard.is_pressed('w') and keyboard.is_pressed('a'): command = "q" #"fwdl"
-        elif keyboard.is_pressed('w') and keyboard.is_pressed('d'): command = "e" #"fwdr"
-        elif keyboard.is_pressed('s') and keyboard.is_pressed('a'): command = "z" #"bwdl"
-        elif keyboard.is_pressed('s') and keyboard.is_pressed('d'): command = "c" #"bwdr"
-        elif keyboard.is_pressed('w'): command = "w" #"forward"
-        elif keyboard.is_pressed('a'): command = "a" #"left"
-        elif keyboard.is_pressed('s'): command = "s" #"backward"
-        elif keyboard.is_pressed('d'): command = "d" #"right"
-        else: command = "n" #"none"
-
-        
-        print(command)
-
-        #Secure message
-        key0 = r.randint(45, 126) #81 ascii-karakterer som ikke er et komma - Giver 81^2 (6.561) forskellige kombinationer
-        key1 = r.randint(45, 126)
-        key = int(str(key0)+str(key1)+str(ord(command)))
-        charKey0 = chr(key0)
-        charKey1 = chr(key1)
-        code = secure(key)
-        command = f",{charKey0+charKey1},{command},{code},"
-        print(key)
-        print(command)
-
-        #End message
-        command+='\r\n'
-        
-        #serialSend = f",{startSend},{command},{endSend},"
-        #s.write(serialSend.encode())
-        s.write(command.encode())
-
-        #input()
 
