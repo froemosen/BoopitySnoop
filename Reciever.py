@@ -76,7 +76,6 @@ def secure(recieved):
         timeOK = False
 
     prevTime = time
-    #display.scroll(str((key*27%123456*42+147+key)%999))
 
     code = int(data[3])
 
