@@ -86,8 +86,10 @@ def secure(recieved):
 
 # Event loop
 while True:
-    incoming = radio.receive() #Besked sendt over Radio gemmes i variabel
-    message = str(incoming)
+    try:
+        incoming = radio.receive() #Besked sendt over Radio gemmes i variabel
+        message = str(incoming)
+    except: pass
 
     if not incoming == None:
         try: security, command = secure(message)
